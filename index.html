@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>𝑪𝒐𝒅𝒆𝑪𝒓𝒂𝒇𝒕𝒆𝒓𝒔</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Lexend:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="darkband">
+        <div class="wrap" id="top">
+            <header class="top"><span class="brand" aria-label="CodeCrafters">𝑪𝒐𝒅𝒆𝑪𝒓𝒂𝒇𝒕𝒆𝒓𝒔</span><a
+                    href="#scenarios">Scenarios</a><a href="#logistics">Logistics</a><a href="#routing">Routing</a><a
+                    href="#intelligent">Smart routing</a><a href="#compare">Compare</a><a href="#cs">Computer
+                    science</a><a href="#indicators">Results</a><a href="#solutions">Solutions</a><a
+                    href="#quiz">Quiz</a><a href="#contact">Contact</a><button id="theme" class="alt" type="button"
+                    style="padding:6px 12px">Switch theme</button></header>
+
+            <div class="hero">
+                <p class="hi" id="hi"></p>
+                <h1>Logistics for routing</h1>
+                <p class="sub">How algorithms, data and AI choose the best way to move goods and deliver orders, and
+                    change it when the road changes. Play with the 3D city below.</p>
+            </div>
+
+            <div class="planner">
+                <div class="bar">
+                    <button id="algDij" type="button" aria-pressed="true">AI re-routing</button>
+                    <button id="algBfs" type="button" class="alt" aria-pressed="false">Fixed route</button>
+                    <button id="graphBtn" type="button" class="alt" aria-pressed="false">Show graph</button>
+                    <button id="addStop" type="button" class="alt">Random trip</button>
+                </div>
+                <canvas id="map" role="img"
+                    aria-label="3D city map with a depot, delivery stops, traffic jams and the planned route"></canvas>
+                <div class="legend"><span><i style="background:var(--orange)"></i>The van’s route</span><span><i
+                            style="background:var(--red)"></i>Traffic jam</span><span><i
+                            style="background:var(--muted)"></i>Closed road or accident</span><span><b id="tapHint">Next
+                            tap sets the pickup (1).</b> Jams and accidents appear on their own. Tap a road to add one
+                        by hand. Drag to rotate the city.</span></div>
+                <p id="msg" aria-live="polite"></p>
+                <ol id="evlog" class="evlog" aria-live="off"></ol>
+                <div class="stats">
+                    <div><small>Trip time</small><b id="mTime">-</b></div>
+                    <div><small>Fuel (illustrative)</small><b id="mFuel">-</b></div>
+                    <div><small>Cost (illustrative)</small><b id="mCost">-</b></div>
+                    <div><small>Status</small><b id="mOn">-</b></div>
+                    <div><small>Distance</small><b id="mKm">-</b></div>
+                    <div><small>AI re-routes</small><b id="mOther">-</b></div>
+                </div>
+                <p class="note" style="margin:12px 2px 0">Simulated city. The van drives by itself. Jams and accidents
+                    appear on their own and clear after a while. With AI re-routing on, the van plans again whenever the
+                    roads change. With a fixed route it keeps the plan it made at the start of each leg and gets stuck
+                    at accidents. Fuel and cost are illustrative.</p>
+                <div class="solutions-jump-wrap"><a class="solutions-jump" href="#solutions">Explore logistics solutions <span aria-hidden="true">↓</span></a></div>
+            </div>
+        </div>
+    </div>
+
+    <section id="scenarios">
+        <div class="wrap">
+            <h2>Try a scenario</h2>
+            <p>One tap loads a situation into the city above, and the routes react to it.</p>
+            <div class="bar">
+                <button type="button" data-p="accident">Accident on the route</button>
+                <button type="button" data-p="rush" class="alt">Rush hour downtown</button>
+                <button type="button" data-p="bridge" class="alt">Closed bridge (detour)</button>
+                <button type="button" data-p="cut" class="alt">Cut the city in two</button>
+
+                <button type="button" data-p="clear" class="alt">Clear roads</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="logistics" class="alt">
+        <div class="wrap">
+            <h2>Logistics: from the warehouse to the customer</h2>
+            <p>Logistics is the organized movement of goods from storage to the people who ordered them. It covers
+                managing transport, handling orders and running the vehicles.</p>
+            <div class="cols">
+                <div>
+                    <h3>The warehouse</h3>
+                    <p>Where every trip starts and ends. It is the blue D in the city.</p>
+                </div>
+                <div>
+                    <h3>The orders</h3>
+                    <p>Pin 1 is the pickup and pin 2 is the delivery.</p>
+                </div>
+                <div>
+                    <h3>The vehicles</h3>
+                    <p>Limited, costly and always on the move. The white van is one of them.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="routing">
+        <div class="wrap">
+            <h2>Routing: the right road and the right order</h2>
+            <p>Routing decides which road a vehicle takes and in what order it visits its customers, so deliveries are
+                faster and cheaper.</p>
+            <div class="two">
+                <div>
+                    <h3>Which road?</h3>
+                    <p>Between two stops there are many roads. The best one costs the least time and fuel, not just the
+                        fewest turns.</p>
+                </div>
+                <div class="win">
+                    <h3>Which order?</h3>
+                    <p>With several customers, a smart visiting order can save more than a faster road. Choose the
+                        pickup and delivery points in the city and watch the van find its way.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="intelligent" class="alt">
+        <div class="wrap">
+            <h2>Intelligent routing</h2>
+            <p>Intelligent routing uses algorithms, artificial intelligence and traffic data to choose routes, and to
+                change them when there is congestion or an accident.</p>
+            <ol class="tl">
+                <li><b>1</b><span>Collect data: the map, the traffic and where every vehicle is.</span></li>
+                <li><b>2</b><span>Calculate: an algorithm finds the cheapest route and the best order of
+                        customers.</span></li>
+                <li><b>3</b><span>React: when something changes, calculate again and send the vehicle another
+                        way.</span></li>
+            </ol>
+
+        </div>
+    </section>
+
+    <section id="compare">
+        <div class="wrap">
+            <h2>Traditional or intelligent?</h2>
+            <div class="two">
+                <div>
+                    <h3>Traditional</h3>
+                    <p>Fixed routes, planned once, or decisions made by hand. When a road is blocked the driver waits or
+                        improvises.</p><button type="button" class="alt" data-act="trad">See the traditional
+                        route</button>
+                </div>
+                <div class="win">
+                    <h3>Intelligent</h3>
+                    <p>Adapts to changing conditions and calculates again when it has to, so the vehicle keeps moving.
+                    </p><button type="button" data-act="intel">See the intelligent route</button>
+                </div>
+            </div>
+            <p class="note">In the city above, the traditional route is planned once on clear roads and never changes.
+                The intelligent route is calculated again every time the roads change.</p>
+        </div>
+    </section>
+
+    <section id="cs" class="alt">
+        <div class="wrap">
+            <h2>What computer science adds</h2>
+            <div class="cols">
+                <div>
+                    <h3>Algorithms</h3>
+                    <p>They calculate the routes. The city becomes a graph of junctions and roads, and the algorithm
+                        finds the cheapest path through it.</p><button type="button" class="alt" data-act="graph">See
+                        the graph</button>
+                </div>
+                <div>
+                    <h3>Data analysis</h3>
+                    <p>Traffic records show where and when roads clog. Traffic data helps the system understand where and when roads become congested.</p>
+                </div>
+                <div>
+                    <h3>GPS</h3>
+                    <p>Tells the system where every vehicle is right now, so plans can follow reality.</p>
+                </div>
+                <div>
+                    <h3>Artificial intelligence</h3>
+                    <p>Learns patterns, expects congestion before it happens and improves decisions over time.</p>
+                </div>
+            </div>
+            <p class="note">In this demo the algorithm is real, but the traffic you draw is simulated. </p>
+        </div>
+    </section>
+
+    <section id="indicators">
+        <div class="wrap">
+            <h2>How do we know it works?</h2>
+            <p>A routing system is judged by four results. These numbers come live from the city above, with the
+                traditional route next to each one.</p>
+            <div class="steps">
+                <div>
+                    <h3><i>1</i>Delivery time</h3>
+                    <p><b id="kTime">-</b><br><small id="kTimeT"></small></p>
+                </div>
+                <div>
+                    <h3><i>2</i>Fuel used</h3>
+                    <p><b id="kFuel">-</b><br><small id="kFuelT"></small></p>
+                </div>
+                <div>
+                    <h3><i>3</i>Transport cost</h3>
+                    <p><b id="kCost">-</b><br><small id="kCostT"></small></p>
+                </div>
+                <div>
+                    <h3><i>4</i>Orders on time</h3>
+                    <p><b id="kOn">-</b><br><small id="kOnT"></small></p>
+                </div>
+            </div>
+            <div class="solutions-jump-wrap indicators-jump"><a class="solutions-jump" href="#solutions">See how to solve these problems <span aria-hidden="true">↓</span></a></div>
+
+        </div>
+    </section>
+
+
+    <section id="solutions" class="alt solutions-section">
+        <div class="wrap">
+            <div class="solutions-heading">
+                <span class="solutions-kicker">LOGISTICS &amp; SUPPLY CHAIN</span>
+                <h2>Logistics problems and solutions</h2>
+                <p>Five common challenges. One practical solution at a time.</p>
+            </div>
+            <div class="solution-deck">
+                <article class="solution-slide" data-slide="0">
+                    <span class="solution-tag">TRANSPORTATION</span><h3>High transport costs</h3>
+                    <p class="solution-lead">Reduce the cost of moving goods without slowing down deliveries.</p>
+                    <ul><li>Use route optimization to choose shorter and faster roads.</li><li>Combine orders in one truck to reduce the number of trips.</li><li>Monitor fuel use and maintain vehicles regularly.</li></ul>
+                </article>
+                <article class="solution-slide" data-slide="1">
+                    <span class="solution-tag">DELIVERY OPERATIONS</span><h3>Delivery delays</h3>
+                    <p class="solution-lead">Keep shipments moving and deliver orders on time.</p>
+                    <ul><li>Track shipments in real time to identify delays early.</li><li>Organize delivery schedules around traffic and delivery priorities.</li><li>Prepare alternative routes for traffic, accidents, or bad weather.</li></ul>
+                </article>
+                <article class="solution-slide" data-slide="2">
+                    <span class="solution-tag">WAREHOUSE MANAGEMENT</span><h3>Poor inventory management</h3>
+                    <p class="solution-lead">Keep the right products in stock and avoid shortages or excess inventory.</p>
+                    <ul><li>Use an inventory management system to monitor stock levels.</li><li>Use barcode scanning to update product quantities accurately.</li><li>Forecast customer demand to plan the right stock levels.</li></ul>
+                </article>
+                <article class="solution-slide" data-slide="3">
+                    <span class="solution-tag">SUPPLY CHAIN VISIBILITY</span><h3>Low visibility</h3>
+                    <p class="solution-lead">Give every logistics team a clear view of where goods are and when they will arrive.</p>
+                    <ul><li>Connect suppliers, warehouses, and delivery teams through one shared system.</li><li>Share real-time shipment location and status updates.</li><li>Keep information updated so teams can respond quickly to problems.</li></ul>
+                </article>
+                <article class="solution-slide" data-slide="4">
+                    <span class="solution-tag">CARGO SAFETY</span><h3>Damaged or lost goods</h3>
+                    <p class="solution-lead">Protect products throughout storage, handling, and transportation.</p>
+                    <ul><li>Use suitable packaging to protect goods during transportation.</li><li>Train workers in safe loading, unloading, and storage.</li><li>Track each shipment with barcode or RFID technology.</li></ul>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section id="quiz" class="alt">
+        <div class="wrap">
+            <h2>Quantum Supremacy &amp; Business Potential</h2>
+            <p>5 multiple choice questions. Test your understanding of the key concepts from the presentation. Tap an
+                answer to check it.</p>
+            <p class="qz-score">Score <b id="qzScore">0</b> / 5</p>
+            <div id="qzList"></div>
+            <div id="qzEnd" class="qz-end" hidden></div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="wrap">
+            <h2>Contact us</h2>
+            <p>Questions about the project? Leave your details and the delivery truck will bring the form to you.</p>
+            <div class="stage">
+                <div class="truckrow" aria-hidden="true">
+                    <div class="road" id="road"></div>
+                    <div class="truck" id="truck"><svg viewBox="0 0 300 130">
+                            <defs>
+                                <radialGradient id="tg" cx="50%" cy="65%" r="70%">
+                                    <stop offset="0" stop-color="#ffb35c" stop-opacity=".75" />
+                                    <stop offset="1" stop-color="#ffb35c" stop-opacity="0" />
+                                </radialGradient>
+                            </defs>
+                            <rect x="8" y="14" width="196" height="80" rx="7" fill="#1c3a8c" stroke="#3a62d8"
+                                stroke-width="2" />
+                            <rect x="8" y="80" width="196" height="8" fill="#ff9a2e" />
+                            <rect id="cargoIn" x="34" y="24" width="144" height="50" rx="4" fill="#050a1a" />
+                            <rect x="46" y="48" width="34" height="26" fill="#c98a4a" />
+                            <rect x="84" y="40" width="40" height="34" fill="#b97a3c" />
+                            <rect x="128" y="52" width="32" height="22" fill="#d49a58" />
+                            <rect id="tglow" x="34" y="24" width="144" height="50" rx="4" fill="url(#tg)" opacity="0" />
+                            <g id="door">
+                                <rect x="34" y="24" width="144" height="50" rx="4" fill="#2f5ed0" />
+                                <path d="M34 36H178M34 48H178M34 60H178" stroke="#1c3a8c" stroke-width="2" />
+                                <text x="106" y="55" text-anchor="middle" font-size="15" font-weight="800" fill="#fff"
+                                    font-family="Syne,sans-serif">PATHLY</text>
+                            </g>
+                            <path d="M208 40h44l30 26v28h-74z" fill="#ff9a2e" />
+                            <path d="M216 47h32l18 16h-50z" fill="#0b1636" />
+                            <circle cx="279" cy="82" r="4" fill="#fff6c9" />
+                            <rect x="8" y="94" width="276" height="9" rx="3" fill="#0a1020" />
+                            <g transform="translate(48 106)">
+                                <g class="wheel">
+                                    <circle r="16" fill="#0a0f20" stroke="#8da0d0" stroke-width="3" />
+                                    <circle r="5" fill="#8da0d0" />
+                                    <path d="M-11 0H11M0-11V11" stroke="#8da0d0" stroke-width="2" />
+                                </g>
+                            </g>
+                            <g transform="translate(96 106)">
+                                <g class="wheel">
+                                    <circle r="16" fill="#0a0f20" stroke="#8da0d0" stroke-width="3" />
+                                    <circle r="5" fill="#8da0d0" />
+                                    <path d="M-11 0H11M0-11V11" stroke="#8da0d0" stroke-width="2" />
+                                </g>
+                            </g>
+                            <g transform="translate(246 106)">
+                                <g class="wheel">
+                                    <circle r="16" fill="#0a0f20" stroke="#8da0d0" stroke-width="3" />
+                                    <circle r="5" fill="#8da0d0" />
+                                    <path d="M-11 0H11M0-11V11" stroke="#8da0d0" stroke-width="2" />
+                                </g>
+                            </g>
+                        </svg></div>
+                </div>
+                <form id="reg" novalidate>
+
+                    <label for="fn">Full name</label><input id="fn" autocomplete="name" required>
+                    <label for="fe">Email</label><input id="fe" type="email" autocomplete="email" required>
+                    <label for="fm">Message (optional)</label><textarea id="fm"></textarea>
+                    <p id="err" role="alert"></p>
+                    <button type="submit">Send</button>
+                    <p class="small">Demo form: nothing is sent or stored.</p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="wrap">𝑪𝒐𝒅𝒆𝑪𝒓𝒂𝒇𝒕𝒆𝒓𝒔 · Logistics for Routing · Traffic data: TomTom Traffic Index
+            2025<br><a href="#scenarios" style="color:inherit">Scenarios</a> · <a href="#top" style="color:inherit">Back
+                to the map</a></div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
